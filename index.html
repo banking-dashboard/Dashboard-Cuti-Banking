@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Leave Banking Tracking</title>
+<title>Banking Verification</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 body{
   margin:0;
-  font-family: 'Segoe UI', sans-serif;
+  font-family:'Segoe UI', sans-serif;
   background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
   height:100vh;
   display:flex;
@@ -24,21 +24,14 @@ body{
   text-align:center;
 }
 h2{
-  margin-bottom:5px;
+  margin-bottom:20px;
   color:#1e3c72;
 }
-p.subtitle{
-  color:#555;
-  margin-bottom:25px;
-  font-weight:500;
-}
-.note{
-  font-size:13px;
-  color:#999;
-  margin-top:5px;
+input, button{
+  width:100%;
+  box-sizing:border-box;
 }
 input{
-  width:100%;
   padding:12px;
   margin:10px 0;
   border-radius:10px;
@@ -46,7 +39,7 @@ input{
   font-size:14px;
 }
 .password-wrapper{
-  position: relative;
+  position:relative;
 }
 .toggle-pass{
   position:absolute;
@@ -55,11 +48,10 @@ input{
   transform:translateY(-50%);
   cursor:pointer;
   color:#555;
-  font-weight:bold;
   font-size:12px;
+  font-weight:bold;
 }
 button{
-  width:100%;
   padding:12px;
   background:#1e3c72;
   color:white;
@@ -67,33 +59,47 @@ button{
   border-radius:10px;
   font-weight:bold;
   cursor:pointer;
+  margin-top:10px;
 }
-button:hover{opacity:.9}
-.msg{color:red;margin-top:10px;font-size:14px}
-.hidden{display:none}
+button:hover{opacity:.9;}
+.subtitle{
+  margin-top:15px;
+  font-size:13px;
+  color:#777;
+}
+.msg{
+  color:red;
+  margin-top:10px;
+  font-size:14px;
+}
+.hidden{display:none;}
 </style>
 </head>
 <body>
 
 <div class="box">
-<h2>Leave Banking Tracking</h2>
-<p class="subtitle">Banking Verification 2026</p>
+  <h2>Banking Verification</h2>
 
-<div id="loginBox">
-<input id="id" placeholder="Privy ID">
-<div class="password-wrapper">
-  <input id="pass" type="password" placeholder="Password">
-  <span class="toggle-pass" onclick="togglePassword()">Show</span>
-</div>
-<button onclick="login()">Login</button>
-<div id="msg" class="msg"></div>
-</div>
+  <div id="loginBox">
+    <input id="id" placeholder="Privy ID">
 
-<div id="changeBox" class="hidden">
-<input id="newpass" type="password" placeholder="New Password">
-<button onclick="changePassword()">Change Password</button>
-<div id="msg2" class="msg"></div>
-</div>
+    <div class="password-wrapper">
+      <input id="pass" type="password" placeholder="Password">
+      <span class="toggle-pass" onclick="togglePassword()">Show</span>
+    </div>
+
+    <button onclick="login()">Login</button>
+
+    <p class="subtitle">Banking Verification © 2026</p>
+    <div id="msg" class="msg"></div>
+  </div>
+
+  <div id="changeBox" class="hidden">
+    <input id="newpass" type="password" placeholder="New Password">
+    <button onclick="changePassword()">Change Password</button>
+    <p class="subtitle">Banking Verification © 2026</p>
+    <div id="msg2" class="msg"></div>
+  </div>
 </div>
 
 <script>
@@ -103,6 +109,7 @@ let currentId="";
 function login(){
   const id=idInput();
   const pass=passInput();
+  if(!id || !pass){msg("ID dan Password wajib diisi");return;}
 
   fetch(API+"?mode=login&id="+encodeURIComponent(id)+"&pass="+encodeURIComponent(pass))
   .then(r=>r.text())
@@ -116,14 +123,14 @@ function login(){
         sessionStorage.setItem("privyId",id);
         window.location.href="dashboard.html";
       }
-    }else{
-      msg("Login Failed");
-    }
+    }else msg("Login Failed");
   });
 }
 
 function changePassword(){
   const np=document.getElementById("newpass").value;
+  if(!np){msg2("Password baru wajib diisi");return;}
+
   fetch(API+"?mode=changePassword&id="+encodeURIComponent(currentId)+"&pass="+encodeURIComponent(np))
   .then(r=>r.text())
   .then(t=>{
@@ -139,19 +146,12 @@ function toggleBox(){
   loginBox.classList.add("hidden");
   changeBox.classList.remove("hidden");
 }
-
 function togglePassword(){
-  const passField = document.getElementById("pass");
-  const toggle = document.querySelector(".toggle-pass");
-  if(passField.type==="password"){
-    passField.type="text";
-    toggle.innerText="Hide";
-  }else{
-    passField.type="password";
-    toggle.innerText="Show";
-  }
+  const f=document.getElementById("pass");
+  const t=document.querySelector(".toggle-pass");
+  if(f.type==="password"){f.type="text";t.innerText="Hide";}
+  else{f.type="password";t.innerText="Show";}
 }
-
 function idInput(){return document.getElementById("id").value.trim();}
 function passInput(){return document.getElementById("pass").value.trim();}
 function msg(t){document.getElementById("msg").innerText=t;}
