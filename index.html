@@ -5,81 +5,131 @@
 <title>Dashboard Cuti</title>
 
 <style>
+*{box-sizing:border-box;}
 body{
-  font-family: Arial;
-  background:#eef2f7;
+  margin:0;
+  font-family: "Segoe UI", Arial;
+  background:linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb);
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
-.box{
-  width:380px;
-  margin:60px auto;
-  background:white;
-  padding:25px;
-  border-radius:12px;
-  box-shadow:0 0 15px rgba(0,0,0,.1);
-}
-h2{text-align:center;margin-bottom:20px;color:#333;}
 
-input,button{
+.app{
+  width:380px;
+  background:rgba(255,255,255,.15);
+  backdrop-filter:blur(12px);
+  border-radius:20px;
+  padding:25px;
+  box-shadow:0 20px 40px rgba(0,0,0,.3);
+  color:white;
+  animation:fade .6s ease;
+}
+
+@keyframes fade{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+h2{
+  text-align:center;
+  margin-bottom:20px;
+  font-weight:600;
+}
+
+input{
   width:100%;
   padding:12px;
-  margin-top:10px;
-  font-size:15px;
-}
-button{
-  background:#1d4ed8;
-  color:white;
+  border-radius:10px;
   border:none;
-  border-radius:6px;
-  cursor:pointer;
+  font-size:15px;
+  margin-top:10px;
 }
-button:hover{background:#1e40af;}
+
+button{
+  width:100%;
+  margin-top:15px;
+  padding:12px;
+  border:none;
+  border-radius:10px;
+  background:#22c55e;
+  color:white;
+  font-size:15px;
+  cursor:pointer;
+  transition:.3s;
+}
+
+button:hover{background:#16a34a;}
+
+.profile{
+  text-align:center;
+  margin-bottom:15px;
+}
+
+.profile h3{margin:5px 0;}
+.profile small{opacity:.8;}
 
 .card{
-  background:#f8fafc;
-  padding:15px;
-  border-radius:10px;
-  margin-top:15px;
-}
-
-.stat{
+  background:rgba(255,255,255,.15);
+  padding:14px;
+  border-radius:12px;
+  margin-top:12px;
   display:flex;
   justify-content:space-between;
-  margin-top:10px;
-  padding:10px;
-  background:white;
-  border-radius:8px;
-  box-shadow:0 0 5px rgba(0,0,0,.05);
+  align-items:center;
 }
 
-.red{color:red;font-weight:bold;}
-.green{color:green;font-weight:bold;}
+.stat-title{opacity:.85;font-size:14px;}
+
+.green{color:#22c55e;font-weight:bold;}
+.red{color:#ef4444;font-weight:bold;}
+
+.logout{
+  background:#ef4444;
+}
+.logout:hover{background:#dc2626;}
+
 </style>
 </head>
 
 <body>
 
-<div class="box">
+<div class="app">
 
+<!-- LOGIN -->
 <div id="login">
-  <h2>Login Cuti</h2>
+  <h2>Dashboard Cuti</h2>
   <input id="id" placeholder="Masukkan Privy ID">
-  <button onclick="cek()">Login</button>
+  <button onclick="cek()">Masuk</button>
 </div>
 
+<!-- DASHBOARD -->
 <div id="dash" style="display:none">
-  <h2>Dashboard</h2>
 
-  <div class="card">
-    <b id="nama"></b><br>
-    <span id="role"></span><br>
-    Join: <span id="join"></span>
+  <div class="profile">
+    <h3 id="nama"></h3>
+    <small id="role"></small><br>
+    <small>Join: <span id="join"></span></small>
   </div>
 
-  <div class="stat">Jatah <b id="jatah"></b></div>
-  <div class="stat">Terpakai <b id="terpakai"></b></div>
-  <div class="stat">Sisa <b id="sisa"></b></div>
+  <div class="card">
+    <span class="stat-title">Jatah</span>
+    <b id="jatah"></b>
+  </div>
 
-  <button onclick="logout()" style="background:#999;margin-top:15px">Logout</button>
+  <div class="card">
+    <span class="stat-title">Terpakai</span>
+    <b id="terpakai"></b>
+  </div>
+
+  <div class="card">
+    <span class="stat-title">Sisa Bisa Diambil</span>
+    <b id="sisa"></b>
+  </div>
+
+  <button class="logout" onclick="logout()">Logout</button>
+
 </div>
 
 </div>
@@ -96,8 +146,8 @@ function cek(){
     if(d.error){
       alert("Privy ID tidak ditemukan");
     }else{
-      document.getElementById("login").style.display="none";
-      document.getElementById("dash").style.display="block";
+      login.style.display="none";
+      dash.style.display="block";
 
       nama.innerText=d.nama;
       role.innerText=d.role;
