@@ -8,8 +8,9 @@
 <style>
 body{
   margin:0;
-  font-family:Segoe UI, sans-serif;
-  background:#f1f4f9;
+  font-family:'Segoe UI', sans-serif;
+  background:#f4f6f9;
+  color:#333;
 }
 .header{
   background:linear-gradient(135deg,#1e3c72,#2a5298);
@@ -18,8 +19,9 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
+  box-shadow:0 4px 10px rgba(0,0,0,.1);
 }
-.header h2{margin:0;font-weight:500;}
+.header h2{margin:0;font-weight:500;font-size:20px;}
 .logout{
   background:#e74c3c;
   color:white;
@@ -27,7 +29,9 @@ body{
   padding:8px 16px;
   border-radius:8px;
   cursor:pointer;
+  transition:.2s;
 }
+.logout:hover{opacity:.85;}
 .container{
   padding:25px;
 }
@@ -40,12 +44,13 @@ body{
   background:white;
   padding:20px;
   border-radius:14px;
-  box-shadow:0 8px 20px rgba(0,0,0,.08);
+  box-shadow:0 4px 15px rgba(0,0,0,.05);
   text-align:center;
   transition:.3s;
 }
 .cardBox:hover{
   transform:translateY(-5px);
+  box-shadow:0 8px 20px rgba(0,0,0,.1);
 }
 .cardBox h3{
   margin:0;
@@ -54,11 +59,14 @@ body{
 }
 .cardBox p{
   margin:8px 0 0;
-  color:#777;
+  color:#555;
+  font-weight:500;
 }
 .tabs{
   margin-top:30px;
   display:flex;
+  border-radius:12px;
+  overflow:hidden;
 }
 .tabs button{
   flex:1;
@@ -67,6 +75,7 @@ body{
   background:#ddd;
   font-weight:bold;
   cursor:pointer;
+  transition:.2s;
 }
 .tabs button.active{
   background:#1e3c72;
@@ -77,16 +86,18 @@ body{
   margin-top:20px;
   padding:25px;
   border-radius:14px;
-  box-shadow:0 8px 20px rgba(0,0,0,.08);
+  box-shadow:0 4px 15px rgba(0,0,0,.05);
 }
-.hidden{display:none;}
-table{
+.section table{
   width:100%;
   border-collapse:collapse;
 }
-td{
+.section td{
   padding:12px;
   border-bottom:1px solid #eee;
+}
+.section tr:hover td{
+  background:#f0f4f8;
 }
 .footer{
   text-align:center;
@@ -138,7 +149,7 @@ td{
 </div>
 
 <div class="footer">
-© Leave Management System
+© 2026 Leave Banking System
 </div>
 
 <script>
