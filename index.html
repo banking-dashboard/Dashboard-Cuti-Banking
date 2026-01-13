@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Dashboard Cuti</title>
+
+<style>
+body{
+  font-family: Arial;
+  background:#eef2f7;
+}
+.box{
+  width:380px;
+  margin:60px auto;
+  background:white;
+  padding:25px;
+  border-radius:12px;
+  box-shadow:0 0 15px rgba(0,0,0,.1);
+}
+h2{text-align:center;margin-bottom:20px;color:#333;}
+
+input,button{
+  width:100%;
+  padding:12px;
+  margin-top:10px;
+  font-size:15px;
+}
+button{
+  background:#1d4ed8;
+  color:white;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+button:hover{background:#1e40af;}
+
+.card{
+  background:#f8fafc;
+  padding:15px;
+  border-radius:10px;
+  margin-top:15px;
+}
+
+.stat{
+  display:flex;
+  justify-content:space-between;
+  margin-top:10px;
+  padding:10px;
+  background:white;
+  border-radius:8px;
+  box-shadow:0 0 5px rgba(0,0,0,.05);
+}
+
+.red{color:red;font-weight:bold;}
+.green{color:green;font-weight:bold;}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<div id="login">
+  <h2>Login Cuti</h2>
+  <input id="id" placeholder="Masukkan Privy ID">
+  <button onclick="cek()">Login</button>
+</div>
+
+<div id="dash" style="display:none">
+  <h2>Dashboard</h2>
+
+  <div class="card">
+    <b id="nama"></b><br>
+    <span id="role"></span><br>
+    Join: <span id="join"></span>
+  </div>
+
+  <div class="stat">Jatah <b id="jatah"></b></div>
+  <div class="stat">Terpakai <b id="terpakai"></b></div>
+  <div class="stat">Sisa <b id="sisa"></b></div>
+
+  <button onclick="logout()" style="background:#999;margin-top:15px">Logout</button>
+</div>
+
+</div>
+
+<script>
+const api = "https://script.google.com/macros/s/AKfycbyRLXacFTjZnugwzs9wwDw0_Z8y8lq7Rg27gtNO1r4NdX7Onv7PBE1ydJ4ZM4GbgzEgjQ/exec";
+
+function cek(){
+  const id = document.getElementById("id").value;
+
+  fetch(`${api}?id=${id}`)
+  .then(r=>r.json())
+  .then(d=>{
+    if(d.error){
+      alert("Privy ID tidak ditemukan");
+    }else{
+      document.getElementById("login").style.display="none";
+      document.getElementById("dash").style.display="block";
+
+      nama.innerText=d.nama;
+      role.innerText=d.role;
+      join.innerText=new Date(d.join).toLocaleDateString();
+
+      jatah.innerText=d.jatah;
+      terpakai.innerText=d.terpakai;
+
+      sisa.innerText=d.sisa;
+      sisa.className=d.sisa<0?"red":"green";
+    }
+  })
+}
+
+function logout(){
+  location.reload();
+}
+</script>
+
+</body>
+</html>
