@@ -1,32 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
 <title>Leave System Login</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 body{
-  background:linear-gradient(135deg,#1e3c72,#2a5298);
-  font-family:Segoe UI,Arial,sans-serif;
+  margin:0;
+  height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
-  height:100vh;
-  margin:0;
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  font-family:Segoe UI;
 }
-.card{
+.login-box{
   background:white;
-  width:360px;
-  padding:30px;
-  border-radius:12px;
-  box-shadow:0 15px 35px rgba(0,0,0,.3);
+  padding:35px;
+  width:350px;
+  border-radius:16px;
+  box-shadow:0 20px 40px rgba(0,0,0,.3);
+  text-align:center;
 }
-h2{text-align:center;margin-bottom:20px;color:#1e3c72;}
+.login-box h2{
+  margin-bottom:10px;
+  color:#2c5364;
+}
+.login-box p{
+  color:#777;
+  font-size:14px;
+}
 input{
   width:100%;
   padding:12px;
-  margin:8px 0;
+  margin:10px 0;
   border-radius:8px;
   border:1px solid #ccc;
   font-size:14px;
@@ -34,92 +40,52 @@ input{
 button{
   width:100%;
   padding:12px;
-  background:#1e3c72;
+  margin-top:15px;
+  background:linear-gradient(135deg,#2c5364,#0f2027);
   color:white;
   border:none;
-  border-radius:8px;
+  border-radius:10px;
   font-size:15px;
   cursor:pointer;
 }
-button:hover{background:#162f59;}
-.error{
-  color:red;
-  text-align:center;
-  margin-top:10px;
+button:hover{
+  opacity:.9;
 }
-.modal{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.6);
-  display:none;
-  justify-content:center;
-  align-items:center;
-}
-.modal-box{
-  background:white;
-  padding:25px;
-  width:300px;
-  border-radius:10px;
+.footer{
+  margin-top:15px;
+  font-size:12px;
+  color:#aaa;
 }
 </style>
 </head>
 <body>
 
-<div class="card">
-  <h2>Leave System</h2>
-  <input id="id" placeholder="Privy ID">
-  <input id="pass" type="password" placeholder="Password">
-  <button onclick="login()">Login</button>
-  <div class="error" id="msg"></div>
-</div>
+<div class="login-box">
+  <h2>Employee Leave System</h2>
+  <p>Sign in to your dashboard</p>
 
-<div class="modal" id="modal">
-  <div class="modal-box">
-    <h3>Change Password</h3>
-    <input id="newpass" type="password" placeholder="New Password">
-    <button onclick="changePass()">Save</button>
+  <input id="id" placeholder="Privy ID">
+  <input id="pw" type="password" placeholder="Password">
+
+  <button onclick="login()">Login</button>
+
+  <div class="footer">
+    Secure HR Portal © 2026
   </div>
 </div>
 
 <script>
-const API_URL="https://script.google.com/macros/s/AKfycbwuH4jSCvSGAFG0DUVibG6x17ImLT4ffKr1NGVAHzhvJ7-c4DhIiZ8izlBU-MTStVolCw/exec"; // ganti dengan URL script
-
-let currentId="";
+const API="https://script.google.com/macros/s/AKfycbw5M-jseprlgAy34MB7zYXdit97EdbmSfakjhfqEeIR-E-m768YBV5DPznWiXMkwkp5Zw/exec";
 
 function login(){
-  let id=document.getElementById("id").value;
-  let pass=document.getElementById("pass").value;
-
-  fetch(`${API_URL}?mode=login&id=${id}&pass=${pass}`)
+  fetch(`${API}?mode=login&id=${id.value}&pw=${pw.value}`)
   .then(r=>r.json())
   .then(d=>{
     if(d.status=="ok"){
-      currentId=id;
-      if(d.forceChange=="YES"){
-        document.getElementById("modal").style.display="flex";
-      }else{
-        sessionStorage.setItem("privyId",id);
-        window.location="dashboard.html";
-      }
-    }else{
-      document.getElementById("msg").innerText="Invalid Privy ID or Password";
-    }
-  });
-}
-
-function changePass(){
-  let np=document.getElementById("newpass").value;
-  if(np.length<5){
-    alert("Password minimum 5 characters");
-    return;
-  }
-
-  fetch(`${API_URL}?mode=changePassword&id=${currentId}&pass=${np}`)
-  .then(r=>r.json())
-  .then(d=>{
-    if(d.status=="ok"){
-      sessionStorage.setItem("privyId",currentId);
+      sessionStorage.setItem("privyId",id.value);
       window.location="dashboard.html";
+    }else{
+      alert("Login failed");
     }
   });
 }
