@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <title>Leave Dashboard</title>
@@ -8,39 +8,76 @@
 <style>
 body{
   margin:0;
-  font-family:Segoe UI,sans-serif;
-  background:#eef2f7;
+  font-family:Segoe UI, sans-serif;
+  background:#f1f4f9;
 }
 .header{
-  background:#2c5364;
+  background:linear-gradient(135deg,#1e3c72,#2a5298);
   color:white;
-  padding:18px 25px;
+  padding:20px 30px;
   display:flex;
   justify-content:space-between;
   align-items:center;
 }
-.card{
-  background:white;
-  margin:25px;
+.header h2{margin:0;font-weight:500;}
+.logout{
+  background:#e74c3c;
+  color:white;
+  border:none;
+  padding:8px 16px;
+  border-radius:8px;
+  cursor:pointer;
+}
+.container{
   padding:25px;
-  border-radius:16px;
-  box-shadow:0 10px 25px rgba(0,0,0,.1);
+}
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:20px;
+}
+.cardBox{
+  background:white;
+  padding:20px;
+  border-radius:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,.08);
+  text-align:center;
+  transition:.3s;
+}
+.cardBox:hover{
+  transform:translateY(-5px);
+}
+.cardBox h3{
+  margin:0;
+  font-size:28px;
+  color:#1e3c72;
+}
+.cardBox p{
+  margin:8px 0 0;
+  color:#777;
 }
 .tabs{
+  margin-top:30px;
   display:flex;
-  margin:0 25px;
 }
 .tabs button{
   flex:1;
   padding:12px;
   border:none;
+  background:#ddd;
   font-weight:bold;
   cursor:pointer;
-  background:#ccc;
 }
 .tabs button.active{
-  background:#2c5364;
+  background:#1e3c72;
   color:white;
+}
+.section{
+  background:white;
+  margin-top:20px;
+  padding:25px;
+  border-radius:14px;
+  box-shadow:0 8px 20px rgba(0,0,0,.08);
 }
 .hidden{display:none;}
 table{
@@ -51,32 +88,57 @@ td{
   padding:12px;
   border-bottom:1px solid #eee;
 }
-.logout{
-  background:#c0392b;
-  color:white;
-  border:none;
-  padding:8px 16px;
-  border-radius:8px;
-  cursor:pointer;
+.footer{
+  text-align:center;
+  padding:20px;
+  color:#777;
+  font-size:13px;
 }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div id="userInfo"></div>
+  <h2 id="userInfo"></h2>
   <button class="logout" onclick="logout()">Logout</button>
 </div>
 
+<div class="container">
+
+<div class="cards">
+  <div class="cardBox">
+    <h3 id="annual">0</h3>
+    <p>Annual Leave</p>
+  </div>
+  <div class="cardBox">
+    <h3 id="bonus">0</h3>
+    <p>Bonus Leave</p>
+  </div>
+  <div class="cardBox">
+    <h3 id="taken">0</h3>
+    <p>Leave Taken</p>
+  </div>
+  <div class="cardBox">
+    <h3 id="available">0</h3>
+    <p>Available Leave</p>
+  </div>
+</div>
+
 <div class="tabs">
-  <button id="tab1" class="active" onclick="showTab(1)">Annual Leave</button>
+  <button id="tab1" class="active" onclick="showTab(1)">Annual Summary</button>
   <button id="tab2" onclick="showTab(2)">Leave Tracking</button>
 </div>
 
-<div id="content1" class="card"></div>
-<div id="content2" class="card hidden">
-<h3>Monthly Leave Tracking</h3>
-<p>Tracking per month can be integrated later.</p>
+<div id="content1" class="section"></div>
+<div id="content2" class="section hidden">
+  <h3>Monthly Leave Tracking</h3>
+  <p>Tracking will be integrated with monthly sheet.</p>
+</div>
+
+</div>
+
+<div class="footer">
+© Leave Management System
 </div>
 
 <script>
@@ -91,18 +153,24 @@ fetch(API+"?mode=leave&id="+encodeURIComponent(id))
   const d=JSON.parse(t);
   if(d.status!="ok"){logout();return;}
 
-  userInfo.innerText=d.name+" - "+d.position;
+  userInfo.innerText=d.name+" ("+d.position+")";
+
+  annual.innerText=d.annual;
+  bonus.innerText=d.bonus;
+  taken.innerText=d.taken;
+  available.innerText=d.available;
 
   content1.innerHTML=`
-  <h3>Annual Leave Summary</h3>
+  <h3>Annual Leave Detail</h3>
   <table>
-  <tr><td>Annual Leave</td><td>${d.annual}</td></tr>
-  <tr><td>Bonus Annual Leave</td><td>${d.bonus}</td></tr>
-  <tr><td>Total Annual Leave</td><td>${d.total}</td></tr>
-  <tr><td>Leave Taken</td><td>${d.taken}</td></tr>
-  <tr><td>Year-End Leave Balance</td><td>${d.yearEnd}</td></tr>
-  <tr><td><b>Available Leave</b></td><td><b>${d.available}</b></td></tr>
-  </table>`;
+    <tr><td>Annual Leave</td><td>${d.annual}</td></tr>
+    <tr><td>Bonus Annual Leave</td><td>${d.bonus}</td></tr>
+    <tr><td>Total Annual Leave</td><td>${d.total}</td></tr>
+    <tr><td>Leave Taken</td><td>${d.taken}</td></tr>
+    <tr><td>Year-End Leave Balance</td><td>${d.yearEnd}</td></tr>
+    <tr><td><b>Available Leave</b></td><td><b>${d.available}</b></td></tr>
+  </table>
+  `;
 });
 
 function logout(){
