@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Leave System Login</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+  background:linear-gradient(135deg,#1e3c72,#2a5298);
+  font-family:Segoe UI,Arial,sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+  margin:0;
+}
+.card{
+  background:white;
+  width:360px;
+  padding:30px;
+  border-radius:12px;
+  box-shadow:0 15px 35px rgba(0,0,0,.3);
+}
+h2{text-align:center;margin-bottom:20px;color:#1e3c72;}
+input{
+  width:100%;
+  padding:12px;
+  margin:8px 0;
+  border-radius:8px;
+  border:1px solid #ccc;
+  font-size:14px;
+}
+button{
+  width:100%;
+  padding:12px;
+  background:#1e3c72;
+  color:white;
+  border:none;
+  border-radius:8px;
+  font-size:15px;
+  cursor:pointer;
+}
+button:hover{background:#162f59;}
+.error{
+  color:red;
+  text-align:center;
+  margin-top:10px;
+}
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:none;
+  justify-content:center;
+  align-items:center;
+}
+.modal-box{
+  background:white;
+  padding:25px;
+  width:300px;
+  border-radius:10px;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h2>Leave System</h2>
+  <input id="id" placeholder="Privy ID">
+  <input id="pass" type="password" placeholder="Password">
+  <button onclick="login()">Login</button>
+  <div class="error" id="msg"></div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <h3>Change Password</h3>
+    <input id="newpass" type="password" placeholder="New Password">
+    <button onclick="changePass()">Save</button>
+  </div>
+</div>
+
+<script>
+const API_URL="https://script.google.com/macros/s/AKfycbwuH4jSCvSGAFG0DUVibG6x17ImLT4ffKr1NGVAHzhvJ7-c4DhIiZ8izlBU-MTStVolCw/exec"; // ganti dengan URL script
+
+let currentId="";
+
+function login(){
+  let id=document.getElementById("id").value;
+  let pass=document.getElementById("pass").value;
+
+  fetch(`${API_URL}?mode=login&id=${id}&pass=${pass}`)
+  .then(r=>r.json())
+  .then(d=>{
+    if(d.status=="ok"){
+      currentId=id;
+      if(d.forceChange=="YES"){
+        document.getElementById("modal").style.display="flex";
+      }else{
+        sessionStorage.setItem("privyId",id);
+        window.location="dashboard.html";
+      }
+    }else{
+      document.getElementById("msg").innerText="Invalid Privy ID or Password";
+    }
+  });
+}
+
+function changePass(){
+  let np=document.getElementById("newpass").value;
+  if(np.length<5){
+    alert("Password minimum 5 characters");
+    return;
+  }
+
+  fetch(`${API_URL}?mode=changePassword&id=${currentId}&pass=${np}`)
+  .then(r=>r.json())
+  .then(d=>{
+    if(d.status=="ok"){
+      sessionStorage.setItem("privyId",currentId);
+      window.location="dashboard.html";
+    }
+  });
+}
+</script>
+
+</body>
+</html>
