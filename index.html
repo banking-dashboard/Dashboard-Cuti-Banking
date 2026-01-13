@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <title>Leave System Login</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
 body{
   margin:0;
   font-family:Segoe UI, sans-serif;
-  background:linear-gradient(135deg,#1e3c72,#2a5298);
+  background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
   height:100vh;
   display:flex;
   justify-content:center;
@@ -17,40 +17,41 @@ body{
 }
 .box{
   background:white;
+  width:380px;
   padding:40px;
-  width:360px;
-  border-radius:14px;
-  box-shadow:0 10px 30px rgba(0,0,0,.3);
+  border-radius:16px;
+  box-shadow:0 20px 40px rgba(0,0,0,.3);
   text-align:center;
 }
-h2{margin-bottom:20px;}
+h2{margin-bottom:10px;}
+p{color:#777;margin-bottom:25px;}
 input{
   width:100%;
   padding:12px;
-  margin:8px 0;
-  border-radius:8px;
+  margin:10px 0;
+  border-radius:10px;
   border:1px solid #ccc;
 }
 button{
   width:100%;
   padding:12px;
-  background:#1e3c72;
+  background:#2c5364;
   color:white;
   border:none;
-  border-radius:8px;
+  border-radius:10px;
   font-weight:bold;
   cursor:pointer;
 }
 button:hover{opacity:.9}
-.msg{margin-top:10px;color:red;font-size:14px}
+.msg{color:red;margin-top:10px;font-size:14px}
 .hidden{display:none}
 </style>
 </head>
 <body>
 
 <div class="box">
-
-<h2>Leave System Login</h2>
+<h2>Leave Management</h2>
+<p>Login with your Privy ID</p>
 
 <div id="loginBox">
 <input id="id" placeholder="Privy ID">
@@ -64,54 +65,56 @@ button:hover{opacity:.9}
 <button onclick="changePassword()">Change Password</button>
 <div id="msg2" class="msg"></div>
 </div>
-
 </div>
 
 <script>
 const API="https://script.google.com/macros/s/AKfycbxhcanAcUP06XdvwJFuFioqqNF_CxICBEFMOHBLaCFDa5eVF3oiasFfK__giFWJXgMLqw/exec";
-
 let currentId="";
 
 function login(){
-  const id=document.getElementById("id").value;
-  const pass=document.getElementById("pass").value;
+  const id=idInput();
+  const pass=passInput();
 
-  fetch(API+"?mode=login&id="+id+"&pass="+pass)
-  .then(r=>r.json())
-  .then(d=>{
+  fetch(API+"?mode=login&id="+encodeURIComponent(id)+"&pass="+encodeURIComponent(pass))
+  .then(r=>r.text())
+  .then(t=>{
+    const d=JSON.parse(t);
     if(d.status=="ok"){
       currentId=id;
-
       if(d.forceChange=="YES"){
-        document.getElementById("loginBox").classList.add("hidden");
-        document.getElementById("changeBox").classList.remove("hidden");
+        toggleBox();
       }else{
-        localStorage.setItem("privyId",id);
-        window.location="dashboard.html";
+        sessionStorage.setItem("privyId",id);
+        window.location.href="dashboard.html";
       }
     }else{
-      document.getElementById("msg").innerText="Login Failed";
+      msg("Login Failed");
     }
   });
 }
 
 function changePassword(){
   const np=document.getElementById("newpass").value;
-
-  fetch(API+"?mode=changePassword&id="+currentId+"&pass="+np)
-  .then(r=>r.json())
-  .then(d=>{
+  fetch(API+"?mode=changePassword&id="+encodeURIComponent(currentId)+"&pass="+encodeURIComponent(np))
+  .then(r=>r.text())
+  .then(t=>{
+    const d=JSON.parse(t);
     if(d.status=="ok"){
-      alert("Password changed successfully");
-      window.location="dashboard.html";
-    }else{
-      document.getElementById("msg2").innerText="Failed to change password";
-    }
+      sessionStorage.setItem("privyId",currentId);
+      window.location.href="dashboard.html";
+    }else msg2("Failed change password");
   });
 }
+
+function toggleBox(){
+  loginBox.classList.add("hidden");
+  changeBox.classList.remove("hidden");
+}
+function idInput(){return document.getElementById("id").value.trim();}
+function passInput(){return document.getElementById("pass").value.trim();}
+function msg(t){document.getElementById("msg").innerText=t;}
+function msg2(t){document.getElementById("msg2").innerText=t;}
 </script>
 
 </body>
 </html>
-
-
