@@ -280,7 +280,7 @@
 // CONFIG
 const API_URL = "https://script.google.com/macros/s/AKfycbx88xE9HDhQqSgxpogcWEpOFvKjv_gpWFiPu4qJLfXuqk4rxw9o9Xnh_V-F1_Ax2IjB/exec";
 const user = JSON.parse(localStorage.getItem("user"));
-if(!user || user.role !== "MANAGER") window.location = "login.html";
+if(!user || user.role !== "MANAGER") window.location = "index.html";
 
 document.getElementById("dispName").innerText = user.name;
 document.getElementById("dispMeta").innerText = `${user.privyId} | ${user.position}`;
@@ -499,7 +499,8 @@ function showMsg(t, b) { document.getElementById("msgTitle").innerText=t; docume
 function closeModal() { document.getElementById("msgModal").classList.remove("modal-open"); }
 function confirmLogout() { document.getElementById("logoutModal").classList.add("modal-open"); }
 function closeLogout() { document.getElementById("logoutModal").classList.remove("modal-open"); }
-function doLogout() { localStorage.removeItem("user"); window.location="login.html"; }
+function doLogout() { localStorage.removeItem("user"); window.location="index.html"; }
 </script>
 </body>
+
 </html>
