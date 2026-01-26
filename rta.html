@@ -314,7 +314,7 @@ const API_URL = "https://script.google.com/macros/s/AKfycbx88xE9HDhQqSgxpogcWEpO
 
 // Cek Session
 const user = JSON.parse(localStorage.getItem("user"));
-if(!user || user.role !== "RTA") window.location = "login.html";
+if(!user || user.role !== "RTA") window.location = "index.html";
 
 document.getElementById("dispName").innerText = user.name;
 document.getElementById("dispMeta").innerText = `${user.privyId} | ${user.position}`;
@@ -565,3 +565,4 @@ function doLogout() { localStorage.removeItem("user"); window.location="index.ht
 </body>
 
 </html>
+
